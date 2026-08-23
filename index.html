@@ -60,7 +60,7 @@ header{text-align:center;margin-bottom:26px}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
 h1{
   font-family:'Orbitron',sans-serif;font-weight:900;
-  font-size:clamp(2rem,6vw,3.6rem);
+  font-size:clamp(1.6rem,5vw,3.2rem);
   letter-spacing:.06em;text-transform:uppercase;line-height:1.08;
   position:relative;display:inline-block;color:#eafcff;
   text-shadow:0 0 8px rgba(0,234,255,.8),0 0 28px rgba(0,234,255,.4),0 0 60px rgba(182,75,255,.45);
@@ -132,13 +132,14 @@ h1 .grad{
 .card:hover{transform:translateY(-3px);border-color:rgba(0,234,255,.6);box-shadow:0 0 26px rgba(0,234,255,.22), inset 0 0 24px rgba(182,75,255,.05)}
 .card:hover::before{left:130%}
 .card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.card h3{font-size:15.5px;line-height:1.35;letter-spacing:.03em;color:#eefcff;text-transform:uppercase}
+.card h3{font-size:15px;line-height:1.35;letter-spacing:.03em;color:#eefcff;text-transform:uppercase}
 .price{
-  font-family:'Orbitron',sans-serif;font-size:1.28rem;font-weight:700;white-space:nowrap;
+  font-family:'Orbitron',sans-serif;font-size:1.22rem;font-weight:700;white-space:nowrap;text-align:right;
   background:linear-gradient(92deg,var(--cyan),var(--purple));
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
   filter:drop-shadow(0 0 8px rgba(182,75,255,.55));
 }
+.unit{display:block;font-family:'Share Tech Mono',monospace;font-size:10.5px;color:var(--dim);-webkit-text-fill-color:var(--dim);filter:none;letter-spacing:.05em;margin-top:3px}
 .meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
 .badge{
   font-size:10px;letter-spacing:.18em;text-transform:uppercase;
@@ -146,7 +147,10 @@ h1 .grad{
   background:rgba(0,234,255,.05);
 }
 .badge.pu{border-color:rgba(182,75,255,.4);color:var(--purple);background:rgba(182,75,255,.06)}
-.note{margin-top:11px;font-size:12px;color:var(--dim);line-height:1.5}
+.badge.dim{border-color:rgba(90,140,180,.3);color:var(--dim)}
+.receipt-line{margin-top:11px;font-size:11.5px;color:rgba(90,160,200,.75);letter-spacing:.04em}
+.receipt-line b{color:rgba(0,234,255,.6);font-weight:normal}
+.note{margin-top:8px;font-size:12px;color:var(--dim);line-height:1.5}
 .cart-row{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px dashed rgba(90,140,180,.25)}
 .qty{display:flex;align-items:center;gap:10px}
 .qty button{
@@ -154,6 +158,7 @@ h1 .grad{
   background:rgba(0,234,255,.07);color:var(--cyan);border:1px solid var(--line);transition:.15s;
 }
 .qty button:hover{background:rgba(0,234,255,.2);box-shadow:0 0 12px rgba(0,234,255,.4)}
+.qty button:disabled{opacity:.3;cursor:default;box-shadow:none}
 .qty .n{min-width:26px;text-align:center;font-family:'Orbitron',sans-serif;color:var(--purple);text-shadow:0 0 8px rgba(182,75,255,.6)}
 .line-total{font-size:12.5px;color:var(--cyan);letter-spacing:.08em;min-width:64px;text-align:right}
 .empty{text-align:center;padding:70px 20px;color:var(--dim)}
@@ -192,13 +197,14 @@ footer a:hover{text-shadow:0 0 10px rgba(0,234,255,.8)}
 <body>
 <div class="wrap">
   <header>
-    <div class="logo-tag"><span class="dot"></span>DTPI SYSTEM v1.0 // ONLINE<span class="dot"></span></div>
+    <div class="logo-tag"><span class="dot"></span>DTPI SYSTEM v2.0 // ONLINE<span class="dot"></span></div>
     <div><h1><span class="grad">DTPI</span> DYLAN'S TRADE JOE PRICE INPUT</h1></div>
-    <p class="tagline">GROCERY PRICE REFERENCE CALCULATOR // <b>EAST HARLEM RECEIPT ARCHIVE</b> // JUL 30 &ndash; AUG 22, 2026</p>
+    <p class="tagline">FULL RECEIPT LINE-ITEM DATABASE // <b>EVERY ITEM &bull; EVERY PRICE</b> // JUL 30 &ndash; AUG 22, 2026</p>
     <div class="stats">
-      <div class="stat"><div class="v" id="stTotal">0</div><div class="k">Items Tracked</div></div>
-      <div class="stat"><div class="v" id="stStores">0</div><div class="k">Stores Scanned</div></div>
-      <div class="stat"><div class="v" id="stPriced">0</div><div class="k">Priced Entries</div></div>
+      <div class="stat"><div class="v" id="stTotal">0</div><div class="k">Line Items</div></div>
+      <div class="stat"><div class="v" id="stReceipts">0</div><div class="k">Receipts Logged</div></div>
+      <div class="stat"><div class="v" id="stStores">0</div><div class="k">Stores</div></div>
+      <div class="stat"><div class="v" id="stSpend">$0</div><div class="k">Total Tracked</div></div>
     </div>
   </header>
 
@@ -209,7 +215,7 @@ footer a:hover{text-shadow:0 0 10px rgba(0,234,255,.8)}
              placeholder="&gt; ENTER FOOD NAME / STORE / PRICE ... e.g. salmon, fairway, 6.99">
       <button class="clear-btn" id="clearBtn" type="button">CLEAR [ESC]</button>
     </div>
-    <p class="hint">SEARCH BY <code>ITEM NAME</code>, <code>STORE</code>, OR <code>PRICE</code>. PRESS <code>/</code> TO FOCUS. TAP + ON ANY ITEM TO RUN THE TOTAL CALCULATOR.</p>
+    <p class="hint">SEARCH BY <code>ITEM NAME</code>, <code>STORE</code>, <code>DATE</code> OR <code>PRICE</code>. PRESS <code>/</code> TO FOCUS. TAP + ON ANY ITEM TO RUN THE TOTAL CALCULATOR.</p>
     <div class="chips" id="chips"></div>
   </section>
 
@@ -226,7 +232,7 @@ footer a:hover{text-shadow:0 0 10px rgba(0,234,255,.8)}
   </div>
 
   <footer>
-    DATA SOURCE: CHATGPT CONVERSATION &mdash; "FOOD ITEMS LIST" (RECEIPTS FROM TRADER JOE'S, FAIRWAY, CITY FRESH MARKET, WHOLE FOODS &amp; WALGREENS)<br>
+    SOURCE: ORIGINAL RECEIPT SCANS + CHATGPT CONVERSATION "FOOD ITEMS LIST" &mdash; FAIRWAY 86TH ST, TRADER JOE'S (59TH ST + 125TH ST), CITY FRESH MARKET (E 106TH ST), WHOLE FOODS (E 57TH ST) &amp; WALGREENS<br>
     <a href="https://chatgpt.com/share/6a8b3abb-b350-83ea-9190-76160e110e8f" target="_blank" rel="noopener">VIEW ORIGINAL CONVERSATION &#8599;</a> &nbsp;//&nbsp; DTPI = DYLAN'S TRADE JOE PRICE INPUT
   </footer>
 </div>
@@ -243,87 +249,150 @@ footer a:hover{text-shadow:0 0 10px rgba(0,234,255,.8)}
 
 <script>
 const D=[
-{n:"Atlantic Salmon Fillets",s:"Trader Joe's",p:13.09,d:"Aug 3",c:"Protein"},
-{n:"Turkey Burger Patties",s:"Trader Joe's",p:6.99,d:"Aug 3 + Aug 18",c:"Protein"},
-{n:"Crunchy Almond Butter",s:"Trader Joe's",p:6.49,d:"Aug 3 + Aug 18",c:"Pantry"},
-{n:"Roasted & Salted Almonds",s:"Trader Joe's",p:6.49,d:"Aug 3 + Aug 18",c:"Snacks"},
-{n:"Ezekiel Sprouted-Grain Seeded Bread",s:"Trader Joe's",p:5.49,d:"Aug 3",c:"Bakery"},
-{n:"Organic Peas",s:"Trader Joe's",p:2.49,d:"Aug 3",c:"Frozen"},
-{n:"Baby Beets",s:"Trader Joe's",p:2.29,d:"Aug 3",c:"Produce"},
-{n:"Rice Cracker Medley",s:"Trader Joe's",p:2.69,d:"Aug 18",c:"Snacks"},
-{n:"Gluten-Free Oatmeal Coconut Cookies",s:"Trader Joe's",p:5.49,d:"Aug 18",c:"Snacks"},
-{n:"Candied Ginger",s:"Trader Joe's",p:2.29,d:"Aug 18",c:"Snacks"},
-{n:"Kettle-Cooked Chicken",s:"Trader Joe's",p:4.99,d:"Aug 19",c:"Protein"},
-{n:"Greek Spinach Spanakopita",s:"Trader Joe's",p:4.99,d:"Aug 19",c:"Frozen"},
-{n:"French Onion Soup",s:"Trader Joe's",p:5.49,d:"Aug 19",c:"Pantry"},
-{n:"Vegetable Spring Rolls",s:"Trader Joe's",p:4.49,d:"Aug 19",c:"Frozen"},
-{n:"Kimchi",s:"Trader Joe's",p:3.99,d:"Aug 19 (+ unpriced Aug 18)",c:"Pantry"},
-{n:"Green Cabbage",s:"Trader Joe's",p:1.99,d:"Aug 19",c:"Produce"},
-{n:"GoodPop Watermelon Agave Pops",s:"Fairway",p:6.99,d:"Aug 2/3/8/10/15/21",c:"Frozen",note:"RECURRING BUY — $27.96 through Aug 10; ~$70/month pace flagged in source chat."},
-{n:"Post Great Grains Cranberry Almond Cereal",s:"Fairway",p:6.49,d:"Aug 2",c:"Pantry"},
-{n:"Whole-Grain Fig Bars",s:"Fairway",p:4.99,d:"Aug 2",c:"Snacks"},
-{n:"Low-Fat Pretzel Sticks",s:"Fairway",p:4.79,d:"Aug 2",c:"Snacks"},
-{n:"Green Beans",s:"Fairway",p:3.99,d:"Aug 2 + Aug 15",c:"Produce",note:"Price flat across both trips."},
-{n:"Brown Rice Pilaf",s:"Fairway",p:2.99,d:"Aug 2 + Aug 10",c:"Pantry"},
-{n:"Lamb Loin Chops (grass-fed)",s:"Fairway",p:13.36,d:"Aug 3",c:"Protein"},
-{n:"Turkey Pot Pies (2-pack)",s:"Fairway",p:11.98,d:"Aug 3 + Aug 10",c:"Frozen",note:"Effectively $5.99 each."},
-{n:"Organic Tahini",s:"Fairway",p:8.99,d:"Aug 3",c:"Pantry"},
-{n:"Pickles",s:"Fairway",p:5.99,d:"Aug 3",c:"Pantry"},
-{n:"Roast Beef",s:"Fairway",p:6.99,d:"Aug 3",c:"Protein"},
-{n:"Veggie Burgers",s:"Fairway",p:6.59,d:"Aug 3 + Aug 10",c:"Frozen"},
-{n:"Potatoes (5 lb bag)",s:"Fairway",p:3.99,d:"Aug 3",c:"Produce"},
-{n:"White Cheddar Popcorn",s:"Fairway",p:4.59,d:"Aug 10",c:"Snacks"},
-{n:"Baby Spinach",s:"Fairway",p:5.99,d:"Aug 10",c:"Produce"},
-{n:"V8 Vegetable Juice",s:"Fairway",p:5.99,d:"Aug 10",c:"Drinks"},
-{n:"Chicken Pot Pie",s:"Fairway",p:5.99,d:"Aug 10",c:"Frozen"},
-{n:"Potato Salad (2 containers)",s:"Fairway",p:11.98,d:"Aug 15",c:"Protein"},
-{n:"Vanilla Ice Cream",s:"Fairway",p:5.3,d:"Aug 15",c:"Frozen",note:"Approximate price (~$5.30) per source."},
-{n:"Boar's Head Deli Turkey",s:"Fairway",p:null,d:"Aug 15",c:"Protein",note:"$21+ combined for deli turkey products."},
-{n:"Dave's Killer Bread 'Raisin the Roof'",s:"Fairway",p:5.99,d:"Aug 21",c:"Bakery"},
-{n:"Red Bull Zero Sugar (8.4 oz)",s:"Fairway",p:2.69,d:"Aug 8",c:"Drinks",note:"Mid-tier price point in the Red Bull price scan."},
-{n:"Near East Original Rice Pilaf",s:"Fairway",p:2.91,d:"Aug 20",c:"Pantry"},
-{n:"Steve's & Ed's Item (name unconfirmed)",s:"Fairway",p:5.49,d:"Aug 21",c:"Pantry",note:"$5.49 before a $1.00 coupon; receipt text unreadable."},
-{n:"Beefsteak Tomato (~0.6 lb)",s:"Unnamed Market",p:2.99,d:"Aug 5",c:"Produce",note:"~$4.98/lb."},
-{n:"Orwasher's Classic Baguette",s:"Unnamed Market",p:3.99,d:"Aug 5",c:"Bakery"},
-{n:"Grass-Fed Lamb Loin Chops",s:"Unnamed Market",p:22.8,d:"Aug 10",c:"Protein",note:"Same cut later cost $13.36 at Fairway on Aug 3."},
-{n:"Wholesome Pantry Tart Cherry Juice",s:"Unnamed Store",p:5.99,d:"Aug 20",c:"Drinks"},
-{n:"Bachman Thin Pretzels",s:"Unnamed Store",p:4.99,d:"Aug 20",c:"Snacks"},
-{n:"Vegan Rob's Cauliflower Puffs",s:"Unnamed Store",p:3.49,d:"Aug 20",c:"Snacks"},
-{n:"Mexican Red Mango",s:"City Fresh Market",p:2.5,d:"Aug 11",c:"Produce"},
-{n:"Evian Water",s:"City Fresh Market",p:4.0,d:"Aug 11",c:"Drinks"},
-{n:"Red Bull Total Zero (8.4 oz)",s:"City Fresh Market",p:2.99,d:"Aug 11 + Aug 15",c:"Drinks",note:"Regular City Fresh price."},
-{n:"Red Bull Sugar Free (sale)",s:"City Fresh Market",p:2.5,d:"Aug 13 + Aug 15",c:"Drinks",note:"Sale price — cheapest documented can anywhere."},
-{n:"Soda (variety pack)",s:"City Fresh Market",p:5.0,d:"Aug 11",c:"Drinks"},
-{n:"Stella Artois",s:"City Fresh Market",p:7.99,d:"Aug 11",c:"Drinks"},
-{n:"Great Grains Blueberry Cereal",s:"City Fresh Market",p:8.99,d:"Aug 13",c:"Pantry"},
-{n:"Bananas ($0.69/lb)",s:"City Fresh Market",p:0.78,d:"Aug 13 + Aug 22",c:"Produce",note:"$0.69/lb — $0.95 for 1.37 lb, then $0.78 for 1.13 lb."},
-{n:"Smartfood White Cheddar Popcorn",s:"City Fresh Market",p:4.49,d:"Aug 13",c:"Snacks",note:"Sale — $0.10 under the usual $4.59."},
-{n:"Smartfood White Cheddar Popcorn (repeat buy)",s:"City Fresh Market",p:4.59,d:"Aug 19 + Aug 22",c:"Snacks"},
-{n:"Organic Milk",s:"City Fresh Market",p:6.99,d:"Aug 15",c:"Dairy"},
-{n:"Dried Soursop",s:"City Fresh Market",p:6.49,d:"Aug 15",c:"Pantry"},
-{n:"Perdue Whole Chicken",s:"City Fresh Market",p:8.22,d:"Aug 20",c:"Protein"},
-{n:"Organic Valley Whole Milk",s:"City Fresh Market",p:4.99,d:"Aug 22",c:"Dairy",note:"Sale price; regular appears to be $7.99."},
-{n:"365 Battered Pollock",s:"Whole Foods",p:11.47,d:"Aug 19",c:"Frozen",note:"Discounted ~15% from $13.49."},
-{n:"Near East Original Rice Pilaf (sale)",s:"Whole Foods",p:2.29,d:"Aug 18",c:"Pantry",note:"On sale from $2.99 — $0.70 / ~23% off."},
-{n:"Red Bull Zero Sugar (8.4 oz)",s:"Walgreens",p:3.54,d:"Aug 18",c:"Drinks",note:"Most expensive documented — 42% above the sale price."},
-{n:"Mochi",s:"Walgreens",p:null,d:"Aug 18",c:"Snacks",note:"No individual price; $14.96 combined with Red Bull incl. deposits."},
-{n:"365 Dog Treats ('365WFH DOG THRILL')",s:"Unlisted Receipt",p:null,d:"Jul 30",c:"Other",note:"Item name only — no price captured."},
-{n:"Trill Lemonade",s:"Unlisted Receipt",p:null,d:"Jul 30",c:"Drinks",note:"Item name only — no price captured."},
-{n:"Prairie Cali Veg Burger",s:"Unlisted Receipt",p:null,d:"Jul 30",c:"Frozen",note:"Item name only — no price captured."},
-{n:"Chicken Noodle Soup (x2)",s:"Unlisted Receipt",p:null,d:"Jul 30",c:"Pantry",note:"Qty 2 — no price captured."},
-{n:"Popcorn in a Pickle",s:"Unlisted Receipt",p:null,d:"Jul 30",c:"Snacks",note:"Item name only — no price captured."},
-{n:"Dry Roasted Edamame",s:"Unlisted Receipt",p:null,d:"Jul 30",c:"Snacks",note:"Item name only — no price captured."},
-{n:"Green Tea Uji Fire",s:"Unlisted Receipt",p:null,d:"Jul 30",c:"Drinks",note:"Item name only — no price captured."},
-{n:"Organic Pasture Eggs",s:"Unlisted Receipt",p:null,d:"Jul 30",c:"Dairy",note:"Also bought at TJ's Aug 18, unpriced."},
-{n:"Hot Smoked Salmon Pieces",s:"Unlisted Receipt",p:null,d:"Jul 30",c:"Protein",note:"Item name only — no price captured."},
-{n:"Raspberry Bar",s:"Unlisted Receipt",p:null,d:"Jul 30",c:"Snacks",note:"Item name only — no price captured."},
-{n:"Everything Bagels",s:"Unlisted Receipt",p:null,d:"Jul 30",c:"Bakery",note:"Item name only — no price captured."},
-{n:"Haricots Verts (7 Beans Green)",s:"Unlisted Receipt",p:null,d:"Jul 30",c:"Produce",note:"Item name only — no price captured."},
-{n:"Grain Veg Tempura",s:"Unlisted Receipt",p:null,d:"Jul 30",c:"Frozen",note:"Item name only — no price captured."}
+{n:"GoodPop Watermelon Agave Pops, 2.75 fl oz, 4 ct",rn:"85692000501",s:"Fairway",loc:"86th St #183",d:"Aug 8, 2026",q:1,up:6.99,p:6.99,c:"Frozen",src:"scan"},
+{n:"Red Bull Zero Sugar Energy Drink, 8.4 fl oz",rn:"61126962372",s:"Fairway",loc:"86th St #183",d:"Aug 8, 2026",q:3,up:2.69,p:8.07,c:"Drinks",src:"scan"},
+{n:"Dr. Bronner's 18-in-1 Hemp Tea Tree Pure-Castile Soap, 16 fl oz",rn:"1878776916",s:"Fairway",loc:"86th St #183",d:"Aug 8, 2026",q:1,up:9.99,p:9.99,c:"Non-Food",src:"scan"},
+{n:"Bottle Deposit",rn:"28949",s:"Fairway",loc:"86th St #183",d:"Aug 8, 2026",q:3,up:.05,p:.15,c:"Fee",src:"scan"},
+{n:"Earthwise Bag Co. Eco Reusable Shopping Bag, Farm Design",rn:"81970301097",s:"Fairway",loc:"86th St #183",d:"Aug 8, 2026",q:1,up:.33,p:.33,c:"Non-Food",src:"scan"},
+{n:"365 Organic Watermelon Lemonade",rn:"365WFM OG WTRMLN LMNADE",s:"Whole Foods",loc:"East 57th St",d:"Aug 18, 2026",q:1,up:4.29,p:4.29,c:"Drinks",src:"scan"},
+{n:"365 Organic Juice",rn:"365WFM OG JUICE",s:"Whole Foods",loc:"East 57th St",d:"Aug 18, 2026",q:1,up:4.99,p:4.99,c:"Drinks",src:"scan"},
+{n:"Near East Long Grain & Wild Rice",rn:"NER WLD LONG RICE",s:"Whole Foods",loc:"East 57th St",d:"Aug 18, 2026",q:1,up:2.29,p:2.29,c:"Pantry",src:"scan",note:"Reg $2.99 — Prime saved $0.70. Receipt total $11.95 for 3 items."},
+{n:"GoodPop Watermelon Agave Pops, 2.75 fl oz, 4 ct",rn:"85692000501",s:"Fairway",loc:"86th St #183",d:"Aug 10, 2026",q:1,up:6.99,p:6.99,c:"Frozen",src:"scan"},
+{n:"Marie Callender's Turkey Pot Pie, Large 15 oz",rn:"2113150692",s:"Fairway",loc:"86th St #183",d:"Aug 10, 2026",q:2,up:5.99,p:11.98,c:"Frozen",src:"scan"},
+{n:"Smartfood Popcorn White Cheddar, 6 oz",rn:"2840080041",s:"Fairway",loc:"86th St #183",d:"Aug 10, 2026",q:1,up:4.59,p:4.59,c:"Snacks",src:"scan"},
+{n:"Marie Callender's Chicken Pot Pie, Large 15 oz",rn:"2113150691",s:"Fairway",loc:"86th St #183",d:"Aug 10, 2026",q:1,up:5.99,p:5.99,c:"Frozen",src:"scan"},
+{n:"V8 Original 100% Vegetable Juice, 64 fl oz",rn:"5100006992",s:"Fairway",loc:"86th St #183",d:"Aug 10, 2026",q:1,up:5.99,p:5.99,c:"Drinks",src:"scan"},
+{n:"Near East Whole Grain Blend Brown Rice Pilaf, 6.17 oz",rn:"7225105092",s:"Fairway",loc:"86th St #183",d:"Aug 10, 2026",q:1,up:2.99,p:2.99,c:"Pantry",src:"scan"},
+{n:"Bowl & Basket Baby Spinach, 1 lb",rn:"4119006636",s:"Fairway",loc:"86th St #183",d:"Aug 10, 2026",q:1,up:5.99,p:5.99,c:"Produce",src:"scan"},
+{n:"Earthwise Bag Co. Eco Reusable Shopping Bag, Farm Design",rn:"81970301097",s:"Fairway",loc:"86th St #183",d:"Aug 10, 2026",q:3,up:.33,p:1.0,c:"Non-Food",src:"scan"},
+{n:"Dr. Praeger's California Veggie Burgers, 2.5 oz, 4 ct",rn:"8086800010",s:"Fairway",loc:"86th St #183",d:"Aug 10, 2026",q:1,up:6.59,p:6.59,c:"Frozen",src:"scan"},
+{n:"Nature's Reserve Lamb Loin Chops, Bone-In, Grass-Fed (Australia)",rn:"2033610000",s:"Fairway",loc:"86th St #183",d:"Aug 10, 2026",q:2,up:14.07,p:22.8,c:"Protein",src:"scan",note:"Avg weight .75 lb pk — $14.0741/lb basis. Receipt total $78.99, 11 items."},
+{n:"Bowl & Basket Green Beans, 12 oz bag",rn:"4119007574",s:"Fairway",loc:"86th St #183",d:"Aug 10, 2026",q:1,up:3.99,p:3.99,c:"Produce",src:"scan"},
+{n:"Red Bull Zero 8.4 oz",rn:"RED BULL ZERO 8.4OZ",s:"Walgreens",loc:"Drug Store",d:"Aug 18, 2026",q:3,up:3.54,p:10.62,c:"Drinks",src:"scan",note:"3 separate receipt lines. Most expensive Red Bull documented — 42% over sale price."},
+{n:"Bottle Deposit (_UNKNOWN)",rn:"_UNKNOWN",s:"Walgreens",loc:"Drug Store",d:"Aug 18, 2026",q:3,up:.05,p:.15,c:"Fee",src:"scan",note:"Order #14465031532026081803. Receipt total $15.11."},
+{n:"NICE! Vanilla Brown Sugar Mochi, 4.23 oz",rn:"NICE! VNLA BRWN SGR MOCHI 4.23OZ",s:"Walgreens",loc:"Drug Store",d:"Aug 18, 2026",q:1,up:4.34,p:4.34,c:"Snacks",src:"scan"},
+{n:"Oat Beverage",rn:"OAT BEVERAGE",s:"Trader Joe's",loc:"405 E 59th St #0571",d:"Aug 18, 2026",q:1,up:2.99,p:2.99,c:"Drinks",src:"scan"},
+{n:"Belgian Butter Almond Thins",rn:"BELGIAN BUTTER ALMOND TH",s:"Trader Joe's",loc:"405 E 59th St #0571",d:"Aug 18, 2026",q:1,up:3.29,p:3.29,c:"Snacks",src:"scan"},
+{n:"Strawberry Batons",rn:"BATONS STRAWBERRY",s:"Trader Joe's",loc:"405 E 59th St #0571",d:"Aug 18, 2026",q:1,up:1.99,p:1.99,c:"Snacks",src:"scan"},
+{n:"Eggs Large Cage-Free White",rn:"EGGS LARGE CAGE FREE WHI",s:"Trader Joe's",loc:"405 E 59th St #0571",d:"Aug 18, 2026",q:1,up:2.99,p:2.99,c:"Dairy",src:"scan"},
+{n:"Yogurt Pretzels",rn:"T PRETZELS YOGURT",s:"Trader Joe's",loc:"405 E 59th St #0571",d:"Aug 18, 2026",q:1,up:4.29,p:4.29,c:"Snacks",src:"scan"},
+{n:"Green Tea Unsweetened Blue Pomegranate",rn:"GREEN TEA UNSWT BLUE POM",s:"Trader Joe's",loc:"405 E 59th St #0571",d:"Aug 18, 2026",q:1,up:2.29,p:2.29,c:"Drinks",src:"scan"},
+{n:"Kimchi",rn:"KIMCHI",s:"Trader Joe's",loc:"405 E 59th St #0571",d:"Aug 18, 2026",q:1,up:3.99,p:3.99,c:"Pantry",src:"scan"},
+{n:"Super Sour Scandinavian Gummies",rn:"T GUMMY SUPER SOUR SCANDIN",s:"Trader Joe's",loc:"405 E 59th St #0571",d:"Aug 18, 2026",q:1,up:3.99,p:3.99,c:"Snacks",src:"scan"},
+{n:"Turkey Burger Patties",rn:"TURKEY BURGER PATTIES ON",s:"Trader Joe's",loc:"405 E 59th St #0571",d:"Aug 18, 2026",q:1,up:6.99,p:6.99,c:"Protein",src:"scan"},
+{n:"Organic Seeded Bread",rn:"ORGANIC SEEDED BREAD",s:"Trader Joe's",loc:"405 E 59th St #0571",d:"Aug 18, 2026",q:1,up:4.49,p:4.49,c:"Bakery",src:"scan"},
+{n:"Organic Gold Potatoes, 3 lb",rn:"A-POTATO GOLD ORG 3 LB",s:"Trader Joe's",loc:"405 E 59th St #0571",d:"Aug 18, 2026",q:1,up:3.99,p:3.99,c:"Produce",src:"scan"},
+{n:"Rice Cracker Medley",rn:"RICE CRACKER MEDLEY",s:"Trader Joe's",loc:"405 E 59th St #0571",d:"Aug 18, 2026",q:1,up:2.69,p:2.69,c:"Snacks",src:"scan"},
+{n:"Gluten-Free Oatmeal Coconut Cookies",rn:"COOKIES GF OATMEAL COCON",s:"Trader Joe's",loc:"405 E 59th St #0571",d:"Aug 18, 2026",q:1,up:5.49,p:5.49,c:"Snacks",src:"scan"},
+{n:"Crunchy Salted Almond Butter",rn:"ALMOND BUTTER CRUNCHY SA",s:"Trader Joe's",loc:"405 E 59th St #0571",d:"Aug 18, 2026",q:1,up:6.49,p:6.49,c:"Pantry",src:"scan"},
+{n:"Roasted & Salted Almonds",rn:"ROASTED & SALTED ALMONDS",s:"Trader Joe's",loc:"405 E 59th St #0571",d:"Aug 18, 2026",q:1,up:6.49,p:6.49,c:"Snacks",src:"scan"},
+{n:"Un-crystallized Candied Ginger",rn:"UNCRYSTALLIZED CANDIED G",s:"Trader Joe's",loc:"405 E 59th St #0571",d:"Aug 18, 2026",q:2,up:2.29,p:4.58,c:"Snacks",src:"scan",note:"Two separate $2.29 lines on the receipt. Balance to pay $68.88 incl. $0.73 tax (25 items)."},
+{n:"Bananas",rn:"BANANA EACH",s:"Trader Joe's",loc:"405 E 59th St #0571",d:"Aug 18, 2026",q:4,up:.23,p:.92,c:"Produce",src:"scan"},
+{n:"Bag Fee",rn:"BAG FEE.",s:"Trader Joe's",loc:"405 E 59th St #0571",d:"Aug 18, 2026",q:4,up:.05,p:.2,c:"Fee",src:"scan",note:"Two 2 @ $0.05 lines on the receipt."},
+{n:"Fresh Beefsteak Tomato",rn:"4799",s:"Fairway",loc:"86th St #183",d:"Aug 5, 2026",q:1,up:2.99,p:2.99,c:"Produce",src:"scan",note:"1 × $4.98333/lb (~0.6 lb)."},
+{n:"Orwasher's Classic Baguette",rn:"ORWSHRS CLSC BAGUE / 85006361945",s:"Fairway",loc:"86th St #183",d:"Aug 5, 2026",q:1,up:3.99,p:3.99,c:"Bakery",src:"scan"},
+{n:"Earthwise Bag Co. Eco Reusable Shopping Bag, Farm Design",rn:"81970301097",s:"Fairway",loc:"86th St #183",d:"Aug 5, 2026",q:1,up:.33,p:.33,c:"Non-Food",src:"scan"},
+{n:"Organic Valley Whole Milk (SALE)",rn:"0009396651300",s:"City Fresh Market",loc:"235 E 106 St",d:"Aug 22, 2026",q:1,up:4.99,p:4.99,c:"Dairy",src:"scan",note:"Markdown $3.00 — regular appears to be $7.99. Inv#00412205."},
+{n:"Smartfood White Cheddar Popcorn",rn:"0002840080041",s:"City Fresh Market",loc:"235 E 106 St",d:"Aug 22, 2026",q:1,up:4.59,p:4.59,c:"Snacks",src:"scan"},
+{n:"Yellow Bananas (SALE)",rn:"000000004011",s:"City Fresh Market",loc:"235 E 106 St",d:"Aug 22, 2026",q:1,up:.78,p:.78,c:"Produce",src:"scan",note:"1.13 lb @ $0.69/lb, markdown $0.11. Receipt total $10.36, savings $3.11."},
+{n:"Imodium A-D Mint Flavor",rn:"0030045013404",s:"City Fresh Market",loc:"235 E 106 St",d:"Aug 22, 2026",q:1,up:12.39,p:12.39,c:"Non-Food",src:"scan",note:"Separate receipt — Inv#00302211, total $12.39."},
+{n:"Steve's & Ed's Honey",rn:"STEVES AND EDS HONPC",s:"Fairway",loc:"East 86th St",d:"Aug 21, 2026",q:1,up:5.49,p:5.49,c:"Pantry",src:"scan",note:"$1.00 store coupon applied — net $4.49."},
+{n:"Dave's Killer Bread Organic Raisin the Roof",rn:"DKB ORG RAISIN ROO",s:"Fairway",loc:"East 86th St",d:"Aug 21, 2026",q:1,up:5.99,p:5.99,c:"Bakery",src:"scan",note:"On Sale You Saved $1.50."},
+{n:"GoodPop Watermelon Agave Pops",rn:"GP WATERMELON AGV",s:"Fairway",loc:"East 86th St",d:"Aug 21, 2026",q:2,up:6.99,p:13.98,c:"Frozen",src:"scan",note:"2 @ $6.99. Receipt balance $24.82, total savings $2.50."},
+{n:"Earthwise T-Shirt Bag",rn:"EARTHWISE TSHIRT BA",s:"Fairway",loc:"East 86th St",d:"Aug 21, 2026",q:1,up:.33,p:.33,c:"Non-Food",src:"scan"},
+{n:"Perdue Whole Chicken",rn:"PERDU WHOLE CHIC / 0020165000000",s:"City Fresh Market",loc:"235 E 106 St",d:"Aug 20, 2026",q:1,up:8.22,p:8.22,c:"Protein",src:"scan",note:"Inv#00411778 — receipt total $8.22."},
+{n:"Near East Rice Pilaf Original",rn:"NEAR RICE PLF ORIGPC",s:"Fairway",loc:"East 86th St",d:"Aug 20, 2026",q:1,up:2.91,p:2.91,c:"Pantry",src:"scan",note:"On Sale You Saved $0.08."},
+{n:"Near East Couscous (free coupon line)",rn:"NEAR EAST COUSCOUS",s:"Fairway",loc:"East 86th St",d:"Aug 20, 2026",q:1,up:-1.42,p:-1.42,c:"Pantry",src:"scan",note:"$1.42-F store coupon — no base price printed."},
+{n:"Bachman Thin Pretzels",rn:"BACHMAN PRTZL THIN",s:"Fairway",loc:"East 86th St",d:"Aug 20, 2026",q:1,up:4.99,p:4.99,c:"Snacks",src:"scan"},
+{n:"Wholesome Pantry Organic Tart Cherry Juice",rn:"WPO TART CHERRY JCPC",s:"Fairway",loc:"East 86th St",d:"Aug 20, 2026",q:1,up:5.99,p:5.99,c:"Drinks",src:"scan",note:"$1.00 store coupon applied — net $4.99."},
+{n:"Vegan Rob's Cauliflower Puffs",rn:"VGNROB PUFFS CAULF",s:"Fairway",loc:"East 86th St",d:"Aug 20, 2026",q:1,up:3.49,p:3.49,c:"Snacks",src:"scan",note:"On Sale You Saved $0.30."},
+{n:"Green Beans, 12 oz",rn:"SRBBB 12OZ GRN BEAN",s:"Fairway",loc:"East 86th St",d:"Aug 20, 2026",q:1,up:3.99,p:3.99,c:"Produce",src:"scan"},
+{n:"Tofu Salmon",rn:"TOFU SALMON",s:"Fairway",loc:"East 86th St",d:"Aug 20, 2026",q:1,up:5.99,p:5.99,c:"Protein",src:"scan",note:"Receipt balance $32.29, total savings $2.80."},
+{n:"GoodPop Watermelon Agave Pops",rn:"GP WATERMELON AGV",s:"Fairway",loc:"East 86th St",d:"Aug 20, 2026",q:1,up:6.99,p:6.99,c:"Frozen",src:"scan"},
+{n:"Earthwise T-Shirt Bag",rn:"EARTHWISE TSHIRT BA",s:"Fairway",loc:"East 86th St",d:"Aug 20, 2026",q:1,up:.33,p:.33,c:"Non-Food",src:"scan"},
+{n:"Smartfood White Cheddar Popcorn",rn:"0002840080041",s:"City Fresh Market",loc:"235 E 106 St",d:"Aug 19, 2026",q:1,up:4.59,p:4.59,c:"Snacks",src:"scan",note:"Inv#00614539 — receipt total $4.59."},
+{n:"Kettle Cooked Chicken Soup",rn:"KETTLE COOKED CHICKEN SO",s:"Trader Joe's",loc:"123 W 125th St #0576",d:"Aug 19, 2026",q:1,up:4.99,p:4.99,c:"Pantry",src:"scan"},
+{n:"Kimchi",rn:"KIMCHI",s:"Trader Joe's",loc:"123 W 125th St #0576",d:"Aug 19, 2026",q:1,up:3.99,p:3.99,c:"Pantry",src:"scan"},
+{n:"Spanakopita Greek Spinach",rn:"SPANAKOPITA GREEK SPINAC",s:"Trader Joe's",loc:"123 W 125th St #0576",d:"Aug 19, 2026",q:1,up:4.99,p:4.99,c:"Frozen",src:"scan"},
+{n:"French Onion Soup",rn:"FRENCH ONION SOUP",s:"Trader Joe's",loc:"123 W 125th St #0576",d:"Aug 19, 2026",q:1,up:5.49,p:5.49,c:"Pantry",src:"scan"},
+{n:"Bag Fee",rn:"BAG FEE.",s:"Trader Joe's",loc:"123 W 125th St #0576",d:"Aug 19, 2026",q:1,up:.05,p:.05,c:"Fee",src:"scan"},
+{n:"Vegetable Spring Rolls",rn:"VEGETABLE SPRING ROLLS",s:"Trader Joe's",loc:"123 W 125th St #0576",d:"Aug 19, 2026",q:1,up:4.49,p:4.49,c:"Frozen",src:"scan"},
+{n:"Green Cabbage Head",rn:"R-CABBAGE HEAD GREEN EAC",s:"Trader Joe's",loc:"123 W 125th St #0576",d:"Aug 19, 2026",q:1,up:1.99,p:1.99,c:"Produce",src:"scan",note:"Balance to pay $25.99 (7 items), trans 68222."},
+{n:"365 Battered Pollock",rn:"365 BATTERED POLLOCK",s:"Whole Foods",loc:"East 57th St",d:"Aug 19, 2026",q:1,up:11.47,p:11.47,c:"Frozen",src:"chat",note:"Discounted ~15% from $13.49."},
+{n:"GoodPop Watermelon Agave Pops",rn:"",s:"Fairway",loc:"86th St",d:"Aug 2, 2026",q:1,up:6.99,p:6.99,c:"Frozen",src:"chat",note:"Receipt total $34.94."},
+{n:"Post Great Grains Cranberry Almond Cereal",rn:"",s:"Fairway",loc:"86th St",d:"Aug 2, 2026",q:1,up:6.49,p:6.49,c:"Pantry",src:"chat"},
+{n:"Whole-Grain Fig Bars",rn:"",s:"Fairway",loc:"86th St",d:"Aug 2, 2026",q:1,up:4.99,p:4.99,c:"Snacks",src:"chat"},
+{n:"Low-Fat Pretzel Sticks",rn:"",s:"Fairway",loc:"86th St",d:"Aug 2, 2026",q:1,up:4.79,p:4.79,c:"Snacks",src:"chat"},
+{n:"Green Beans",rn:"",s:"Fairway",loc:"86th St",d:"Aug 2, 2026",q:1,up:3.99,p:3.99,c:"Produce",src:"chat"},
+{n:"Whole-Grain Brown Rice Pilaf",rn:"",s:"Fairway",loc:"86th St",d:"Aug 2, 2026",q:1,up:2.99,p:2.99,c:"Pantry",src:"chat"},
+{n:"Toothpaste + Reusable Bag (non-food)",rn:"",s:"Fairway",loc:"86th St",d:"Aug 2, 2026",q:2,up:null,p:4.32,c:"Non-Food",src:"chat",note:"Combined $4.32 on receipt; individual prices not itemized in source."},
+{n:"Lamb Loin Chops, grass-fed",rn:"",s:"Fairway",loc:"86th St",d:"Aug 3, 2026",q:1,up:13.36,p:13.36,c:"Protein",src:"chat",note:"Fairway trip total $55.30 (savings $3.00)."},
+{n:"Marie Callender's Turkey Pot Pies (2)",rn:"",s:"Fairway",loc:"86th St",d:"Aug 3, 2026",q:2,up:5.99,p:11.98,c:"Frozen",src:"chat"},
+{n:"Organic Tahini",rn:"",s:"Fairway",loc:"86th St",d:"Aug 3, 2026",q:1,up:8.99,p:8.99,c:"Pantry",src:"chat"},
+{n:"Pickles",rn:"",s:"Fairway",loc:"86th St",d:"Aug 3, 2026",q:1,up:5.99,p:5.99,c:"Pantry",src:"chat"},
+{n:"Roast Beef",rn:"",s:"Fairway",loc:"86th St",d:"Aug 3, 2026",q:1,up:6.99,p:6.99,c:"Protein",src:"chat"},
+{n:"GoodPop Watermelon Agave Pops",rn:"",s:"Fairway",loc:"86th St",d:"Aug 3, 2026",q:1,up:6.99,p:6.99,c:"Frozen",src:"chat"},
+{n:"Dr. Praeger's Veggie Burgers",rn:"",s:"Fairway",loc:"86th St",d:"Aug 3, 2026",q:1,up:6.59,p:6.59,c:"Frozen",src:"chat"},
+{n:"Potatoes, 5 lb bag",rn:"",s:"Fairway",loc:"86th St",d:"Aug 3, 2026",q:1,up:3.99,p:3.99,c:"Produce",src:"chat"},
+{n:"Reusable Bag",rn:"",s:"Fairway",loc:"86th St",d:"Aug 3, 2026",q:1,up:.33,p:.33,c:"Non-Food",src:"chat"},
+{n:"Atlantic Salmon Fillets",rn:"",s:"Trader Joe's",loc:"",d:"Aug 3, 2026",q:1,up:13.09,p:13.09,c:"Protein",src:"chat",note:"TJ's trip total $99.95. Combined day spend $159.79."},
+{n:"Turkey Burger Patties",rn:"",s:"Trader Joe's",loc:"",d:"Aug 3, 2026",q:1,up:6.99,p:6.99,c:"Protein",src:"chat"},
+{n:"Crunchy Almond Butter",rn:"",s:"Trader Joe's",loc:"",d:"Aug 3, 2026",q:1,up:6.49,p:6.49,c:"Pantry",src:"chat"},
+{n:"Roasted & Salted Almonds",rn:"",s:"Trader Joe's",loc:"",d:"Aug 3, 2026",q:1,up:6.49,p:6.49,c:"Snacks",src:"chat"},
+{n:"Ezekiel Sprouted-Grain Bread",rn:"",s:"Trader Joe's",loc:"",d:"Aug 3, 2026",q:1,up:5.49,p:5.49,c:"Bakery",src:"chat"},
+{n:"Organic Peas",rn:"",s:"Trader Joe's",loc:"",d:"Aug 3, 2026",q:1,up:2.49,p:2.49,c:"Frozen",src:"chat"},
+{n:"Baby Beets",rn:"",s:"Trader Joe's",loc:"",d:"Aug 3, 2026",q:1,up:2.29,p:2.29,c:"Produce",src:"chat"},
+{n:"Mexican Red Mango",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 11, 2026",q:1,up:2.5,p:2.5,c:"Produce",src:"chat",note:"Receipt total $58.71 (tax $4.06)."},
+{n:"Evian Water",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 11, 2026",q:1,up:4.0,p:4.0,c:"Drinks",src:"chat"},
+{n:"Red Bull Total Zero, 8.4 oz",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 11, 2026",q:2,up:2.99,p:5.98,c:"Drinks",src:"chat"},
+{n:"Soda (variety)",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 11, 2026",q:1,up:5.0,p:5.0,c:"Drinks",src:"chat"},
+{n:"Stella Artois",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 11, 2026",q:1,up:7.99,p:7.99,c:"Drinks",src:"chat"},
+{n:"Glad Tall Kitchen Bags",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 11, 2026",q:1,up:16.49,p:16.49,c:"Non-Food",src:"chat"},
+{n:"Reynolds Wrap",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 11, 2026",q:1,up:6.29,p:6.29,c:"Non-Food",src:"chat"},
+{n:"Bathroom Cleaner",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 11, 2026",q:1,up:5.49,p:5.49,c:"Non-Food",src:"chat"},
+{n:"Great Grains Blueberry Cereal",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 13, 2026",q:1,up:8.99,p:8.99,c:"Pantry",src:"chat",note:"Receipt total $22.75 (tax $0.67)."},
+{n:"Red Bull Sugar Free, 8.4 oz (sale)",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 13, 2026",q:3,up:2.5,p:7.5,c:"Drinks",src:"chat",note:"$2.50/can sale price — cheapest documented."},
+{n:"Smartfood White Cheddar Popcorn (sale)",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 13, 2026",q:1,up:4.49,p:4.49,c:"Snacks",src:"chat"},
+{n:"Bananas, 1.37 lb @ $0.69/lb",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 13, 2026",q:1,up:.95,p:.95,c:"Produce",src:"chat"},
+{n:"Bottle Deposit",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 13, 2026",q:3,up:.05,p:.15,c:"Fee",src:"chat"},
+{n:"Red Bull Total Zero, 8.4 oz",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 15, 2026",q:2,up:2.99,p:5.98,c:"Drinks",src:"chat",note:"Red Bull subtotal this trip $8.48 (3 cans)."},
+{n:"Red Bull Sugar Free, 8.4 oz",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 15, 2026",q:1,up:2.5,p:2.5,c:"Drinks",src:"chat"},
+{n:"Bakery Purchase (unspecified)",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 15, 2026",q:1,up:19.99,p:19.99,c:"Bakery",src:"chat",note:"Receipt total $63.18 (savings $10.40)."},
+{n:"Organic Milk",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 15, 2026",q:1,up:6.99,p:6.99,c:"Dairy",src:"chat"},
+{n:"Dried Soursop",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 15, 2026",q:1,up:6.49,p:6.49,c:"Pantry",src:"chat"},
+{n:"Cream Cheese (both stores combined)",rn:"",s:"City Fresh Market",loc:"E 106 St",d:"Aug 15, 2026",q:1,up:null,p:9.58,c:"Dairy",src:"chat",note:"$9.58 combined across Fairway + City Fresh this day."},
+{n:"Green Beans",rn:"",s:"Fairway",loc:"86th St",d:"Aug 15, 2026",q:1,up:3.99,p:3.99,c:"Produce",src:"chat",note:"Fairway trip total $55.30 (savings $4.11)."},
+{n:"Potato Salad (2 containers)",rn:"",s:"Fairway",loc:"86th St",d:"Aug 15, 2026",q:2,up:5.99,p:11.98,c:"Protein",src:"chat"},
+{n:"GoodPop Watermelon Agave Pops",rn:"",s:"Fairway",loc:"86th St",d:"Aug 15, 2026",q:1,up:6.99,p:6.99,c:"Frozen",src:"chat"},
+{n:"Vanilla Ice Cream",rn:"",s:"Fairway",loc:"86th St",d:"Aug 15, 2026",q:1,up:5.3,p:5.3,c:"Frozen",src:"chat",note:"Approximate price (~$5.30)."},
+{n:"Boar's Head Deli Turkey",rn:"",s:"Fairway",loc:"86th St",d:"Aug 15, 2026",q:1,up:null,p:21.0,c:"Protein",src:"chat",note:"$21+ combined for deli turkey products."},
+{n:"365 Dog Treats",rn:"365WFH DOG THRILL",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Non-Food",src:"chat",note:"Item name only — no price captured in source."},
+{n:"Trill Lemonade",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Drinks",src:"chat"},
+{n:"Near East Original Rice Pilaf",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Pantry",src:"chat"},
+{n:"Prairie Cali Veg Burger",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Frozen",src:"chat"},
+{n:"Almond Butter Crunch",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Pantry",src:"chat"},
+{n:"Chicken Noodle Soup",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:2,up:null,p:null,c:"Pantry",src:"chat"},
+{n:"Popcorn in a Pickle",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Snacks",src:"chat"},
+{n:"Dry Roasted Edamame",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Snacks",src:"chat"},
+{n:"Green Tea Uji Fire",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Drinks",src:"chat"},
+{n:"Organic Seeded Bread",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Bakery",src:"chat"},
+{n:"Turkey Burger Patties",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Protein",src:"chat"},
+{n:"Organic Pasture Eggs",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Dairy",src:"chat"},
+{n:"Hot Smoked Salmon Pieces",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Protein",src:"chat"},
+{n:"Rice Cracker Medley",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Snacks",src:"chat"},
+{n:"Salmon Atlantic Fillets",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Protein",src:"chat"},
+{n:"Roasted & Salted Almonds",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Snacks",src:"chat"},
+{n:"Gluten-Free Cookies",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Snacks",src:"chat"},
+{n:"Raspberry Bar",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Snacks",src:"chat"},
+{n:"Everything Bagels",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Bakery",src:"chat"},
+{n:"Haricots Verts (7 Beans Green)",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Produce",src:"chat"},
+{n:"Grain Veg Tempura",rn:"",s:"Unlisted Receipts",loc:"Jul 30 batch",d:"Jul 30, 2026",q:1,up:null,p:null,c:"Frozen",src:"chat"}
 ];
 D.forEach((x,i)=>x.id=i);
 
 const STORES=[...new Set(D.map(x=>x.s))];
+const RECEIPTS=new Set(D.map(x=>x.s+"|"+x.d+"|"+x.loc));
+const SPEND=D.reduce((a,x)=>a+(x.p>0?x.p:0),0);
 const qEl=document.getElementById("q"),clearBtn=document.getElementById("clearBtn"),
       results=document.getElementById("results"),empty=document.getElementById("empty"),
       countEl=document.getElementById("count"),chipsEl=document.getElementById("chips"),
@@ -333,11 +402,12 @@ let activeStore="ALL";
 const cart=new Map();
 
 document.getElementById("stTotal").textContent=D.length;
+document.getElementById("stReceipts").textContent=RECEIPTS.size;
 document.getElementById("stStores").textContent=STORES.length;
-document.getElementById("stPriced").textContent=D.filter(x=>x.p!=null).length;
+document.getElementById("stSpend").textContent="$"+Math.round(SPEND);
 
-function money(v){return "$"+v.toFixed(2)}
-function hay(x){return [x.n,x.s,x.c,String(x.p??"") , x.p!=null?money(x.p):"", x.pl??"", (x.note||"")].join(" ").toLowerCase()}
+function money(v){return (v<0?"-":"")+"$"+Math.abs(v).toFixed(2)}
+function hay(x){return [x.n,x.rn,x.s,x.loc,x.c,x.d,x.p!=null?String(x.p):"",x.p!=null?money(x.p):"",x.up!=null?String(x.up):"",x.note||""].join(" ").toLowerCase()}
 
 function match(q,x){
   const toks=q.toLowerCase().trim().split(/\s+/).filter(Boolean);
@@ -345,9 +415,9 @@ function match(q,x){
   let score=0;
   for(const t of toks){
     const tNum=t.replace(/^\$/,"");
-    const h=hay(x);
-    if(h.includes(t)){score+=1;continue}
-    if(x.p!=null&&(String(x.p).startsWith(tNum)||money(x.p).includes(t)||tNum.includes(String(x.p)))){score+=1;continue}
+    if(hay(x).includes(t)){score+=1;continue}
+    if(x.p!=null&&(String(x.p).startsWith(tNum)||money(x.p).includes(t))){score+=1;continue}
+    if(x.up!=null&&(String(x.up).startsWith(tNum)||money(x.up).includes(t))){score+=1;continue}
     return 0;
   }
   const n=x.n.toLowerCase();
@@ -359,23 +429,26 @@ function render(){
   clearBtn.style.display=q?"block":"none";
   let rows=D.map(x=>({x,s:match(q,x)})).filter(r=>r.s>0)
             .filter(r=>activeStore==="ALL"||r.x.s===activeStore)
-            .sort((a,b)=>b.s-a.s||a.x.n.localeCompare(b.x.n));
+            .sort((a,b)=>b.s-a.s||a.x.d.localeCompare(b.x.d)||a.x.n.localeCompare(b.x.n));
   countEl.textContent="// "+rows.length+" RECORD"+(rows.length===1?"":"S")+" FOUND";
   empty.style.display=rows.length?"none":"block";
   results.innerHTML=rows.map(({x})=>{
     const qty=cart.get(x.id)||0;
-    const pr=x.p!=null?money(x.p):(x.note&&/\$\d/.test(x.note)?x.note.match(/\$[\d.]+[^.]*/)[0].toUpperCase():"—");
+    const pr=x.p!=null?money(x.p):"NO $ DATA";
+    const unitLine=x.up!=null&&x.q>1?x.q+" × "+money(Math.abs(x.up))+(x.up<0?" COUPON":""):(x.q>1?x.q+" × item":"");
     return `<article class="card">
-      <div class="top"><h3>${esc(x.n)}</h3><div class="price">${esc(pr)}</div></div>
+      <div class="top"><h3>${esc(x.n)}</h3><div class="price">${esc(pr)}${unitLine?`<span class="unit">${esc(unitLine)}</span>`:""}</div></div>
       <div class="meta">
         <span class="badge">${esc(x.s)}</span>
         <span class="badge pu">${esc(x.c)}</span>
         <span class="badge">${esc(x.d)}</span>
+        <span class="badge dim">${x.src==="scan"?"RECEIPT SCAN":"CHAT LOG"}</span>
       </div>
+      ${x.rn?`<p class="receipt-line"><b>RCT&gt;</b> ${esc(x.rn)}${x.loc?" — "+esc(x.loc):""}</p>`:""}
       ${x.note?`<p class="note">// ${esc(x.note)}</p>`:""}
       <div class="cart-row">
         <div class="qty">
-          <button data-a="-" data-id="${x.id}" ${qty?"":"disabled style='opacity:.3'"}>&minus;</button>
+          <button data-a="-" data-id="${x.id}" ${qty?"":"disabled"}>&minus;</button>
           <span class="n">${qty}</span>
           <button data-a="+" data-id="${x.id}">+</button>
         </div>
@@ -393,7 +466,7 @@ function renderCart(){
   if(!units){hud.style.display="none";return}
   hud.style.display="block";
   cartSum.textContent=money(total);
-  cartSub.textContent=units+" UNIT"+(units===1?"":"S")+" SELECTED ACROSS "+[...cart.keys()].length+" ITEM"+([...cart.keys()].length===1?"":"S");
+  cartSub.textContent=units+" UNIT"+(units===1?"":"S")+" SELECTED ACROSS "+cart.size+" ITEM"+(cart.size===1?"":"S");
 }
 
 results.addEventListener("click",e=>{
