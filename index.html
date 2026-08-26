@@ -188,6 +188,13 @@ h1 .grad{
 footer{margin-top:60px;text-align:center;font-size:11px;color:var(--dim);letter-spacing:.14em;line-height:2}
 footer a{color:var(--cyan);text-decoration:none;border-bottom:1px dotted rgba(0,234,255,.5)}
 footer a:hover{text-shadow:0 0 10px rgba(0,234,255,.8)}
+.refdata{margin-top:60px;border:1px solid var(--line);border-radius:16px;padding:22px;background:var(--card);box-shadow:0 0 24px rgba(0,234,255,.12), inset 0 0 24px rgba(182,75,255,.05)}
+.refdata h2{font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.25em;color:var(--cyan);text-shadow:0 0 10px rgba(0,234,255,.6);margin-bottom:16px;text-transform:uppercase}
+.refdata a.frame{display:block;border:1px solid rgba(182,75,255,.45);border-radius:12px;overflow:hidden;background:#02010a}
+.refdata img{display:block;width:100%;height:auto;max-height:560px;object-fit:cover;object-position:top;opacity:.92;transition:.25s}
+.refdata a.frame:hover img{opacity:1;filter:drop-shadow(0 0 18px rgba(0,234,255,.45))}
+.refdata figcaption{margin-top:12px;font-size:11px;color:var(--dim);letter-spacing:.12em;line-height:1.9;text-align:center}
+.refdata figcaption b{color:var(--purple);font-weight:normal;text-shadow:0 0 8px rgba(182,75,255,.6)}
 @media(max-width:560px){
   .grid{grid-template-columns:1fr}
   .cart-hud{left:22px;right:22px;min-width:0}
@@ -230,6 +237,19 @@ footer a:hover{text-shadow:0 0 10px rgba(0,234,255,.8)}
     <div class="big">SIGNAL LOST :: NO MATCH</div>
     <p>NO RECORD FOUND IN THE RECEIPT ARCHIVE.<br>TRY ANOTHER NAME, STORE, OR PRICE.</p>
   </div>
+
+  <section class="refdata">
+    <h2>// REFERENCED DATA &mdash; FIELD TRANSMISSION 17.8.26</h2>
+    <figure>
+      <a class="frame" href="img/goertzel-claude-watermark-thread.png" target="_blank" rel="noopener">
+        <img src="img/goertzel-claude-watermark-thread.png" alt="X thread: Ben Goertzel on Claude-style statistical watermarking and neo-Claudifiers, with Dylan's reply about the $100,000 API and the illusion of control" loading="lazy">
+      </a>
+      <figcaption>
+        LOG // <b>BEN GOERTZEL</b> ON &ldquo;CLAUDE STATISTICAL WATERMARKING&rdquo; &amp; THE NEO-KLODIFIKATOR THREAT &mdash; <b>DYLAN</b> REPLY: &ldquo;SAME AS THE $100,000 API. IT WON'T LAST. IT SATISFIES THE ILLUSION OF CONTROL.&rdquo;<br>
+        ARCHIVED TRANSMISSION &mdash; CONTEXT SOURCE FOR THE DTPI ERA // CLICK TO EXPAND FULL FRAME
+      </figcaption>
+    </figure>
+  </section>
 
   <footer>
     SOURCE: ORIGINAL RECEIPT SCANS + CHATGPT CONVERSATION "FOOD ITEMS LIST" &mdash; FAIRWAY 86TH ST, TRADER JOE'S (59TH ST + 125TH ST), CITY FRESH MARKET (E 106TH ST), WHOLE FOODS (E 57TH ST) &amp; WALGREENS<br>
