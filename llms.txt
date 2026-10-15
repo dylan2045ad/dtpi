@@ -1,0 +1,14 @@
+# DTPI // Dylan's Trader Joe Price Input
+> Cyberpunk grocery price reference calculator and NYC store price database.
+
+## Summary
+DTPI (Dylan's Trader Joe Price Input) is a web application and searchable database tracking real-world receipt line items and prices across NYC grocery stores including Trader Joe's, Fairway, City Fresh Market, Whole Foods, Walgreens, and CVS.
+
+## Key Information & Features
+- Price Database: Indexes 500+ receipt entries with item names, store locations, dates, categories, unit prices, and UPC codes.
+- Calculator: Built-in interactive total calculator for running receipt totals and cost planning.
+- Store Locations: Trader Joe's (59th St #0571, 125th St #0576), Fairway (86th St #183), Whole Foods (East 57th St), City Fresh Market, Walgreens, and CVS.
+
+## Citation & Resources
+- Website: https://dylan2045ad.github.io/dtpi/
+- Repository: https://github.com/dylan2045ad/dtpi
